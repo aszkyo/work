@@ -1,0 +1,1281 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" type="text/css" href="rtwreport.css" /><script language="JavaScript" type="text/javascript">function rtwTableShrink(o) {var t = o.nextSibling;if (t.nodeType != 1) {t = t.nextSibling;}if (t.style.display == "none") {t.style.display = "";o.innerHTML = "[-]"} else {t.style.display = "none";o.innerHTML = "[+] ... "}}</script><script language="JavaScript" type="text/javascript" src="rtwreport_utils.js"></script><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>
+Code Interface Report for APGS
+</title>
+
+</head>
+<body ONLOAD="try {if (top) {if (top.rtwPageOnLoad) top.rtwPageOnLoad('rtwIdCodeInterface'); else local_onload();}} catch(err) {};">
+<h1>
+Code Interface Report for APGS
+</h1>
+<h3>
+Table of Contents
+</h3>
+<ul>
+<li>
+<a href="#sec_Entry_Point_Functions">
+Entry Point Functions
+</a>
+
+</li>
+<li>
+<a href="#sec_Inports">
+Inports
+</a>
+
+</li>
+<li>
+<a href="#sec_Outports">
+Outports
+</a>
+
+</li>
+<li>
+<a href="#sec_Interface_Parameters">
+Interface Parameters
+</a>
+
+</li>
+<li>
+<a href="#sec_Data_Stores">
+Data Stores
+</a>
+
+</li>
+
+</ul>
+<h3>
+<a name="sec_Entry_Point_Functions">
+Entry Point Functions
+</a>
+
+</h3>
+<p>
+Function: <a href="APGS_c.html#fcn_APGS_initialize">APGS_initialize</a>
+</p>
+<table width="100%" class="AltRow" cellspacing="0">
+<tr class="even">
+<td width="25%" align="left" valign="top">
+Prototype
+</td>
+<td width="75%" align="left" valign="top">
+<b>
+void APGS_initialize(void)
+</b>
+
+</td>
+
+</tr>
+<tr class="odd">
+<td width="25%" align="left" valign="top">
+Description
+</td>
+<td width="75%" align="left" valign="top">
+Initialization entry point of generated code
+</td>
+
+</tr>
+<tr class="even">
+<td width="25%" align="left" valign="top">
+Timing
+</td>
+<td width="75%" align="left" valign="top">
+Must be called exactly once
+</td>
+
+</tr>
+<tr class="odd">
+<td width="25%" align="left" valign="top">
+Arguments
+</td>
+<td width="75%" align="left" valign="top">
+None
+</td>
+
+</tr>
+<tr class="even">
+<td width="25%" align="left" valign="top">
+Return value
+</td>
+<td width="75%" align="left" valign="top">
+None
+</td>
+
+</tr>
+<tr class="odd">
+<td width="25%" align="left" valign="top">
+Header file
+</td>
+<td width="75%" align="left" valign="top">
+<a href="APGS_h.html">APGS.h</a>
+</td>
+
+</tr>
+
+</table>
+<p>
+Function: <a href="APGS_c.html#fcn_APGS_step">APGS_step</a>
+</p>
+<table width="100%" class="AltRow" cellspacing="0">
+<tr class="even">
+<td width="25%" align="left" valign="top">
+Prototype
+</td>
+<td width="75%" align="left" valign="top">
+<b>
+void APGS_step(void)
+</b>
+
+</td>
+
+</tr>
+<tr class="odd">
+<td width="25%" align="left" valign="top">
+Description
+</td>
+<td width="75%" align="left" valign="top">
+Output entry point of generated code
+</td>
+
+</tr>
+<tr class="even">
+<td width="25%" align="left" valign="top">
+Timing
+</td>
+<td width="75%" align="left" valign="top">
+Must be called periodically, every 0.001 seconds
+</td>
+
+</tr>
+<tr class="odd">
+<td width="25%" align="left" valign="top">
+Arguments
+</td>
+<td width="75%" align="left" valign="top">
+None
+</td>
+
+</tr>
+<tr class="even">
+<td width="25%" align="left" valign="top">
+Return value
+</td>
+<td width="75%" align="left" valign="top">
+None
+</td>
+
+</tr>
+<tr class="odd">
+<td width="25%" align="left" valign="top">
+Header file
+</td>
+<td width="75%" align="left" valign="top">
+<a href="APGS_h.html">APGS.h</a>
+</td>
+
+</tr>
+
+</table>
+<p>
+Function: <a href="APGS_c.html#fcn_APGS_terminate">APGS_terminate</a>
+</p>
+<table width="100%" class="AltRow" cellspacing="0">
+<tr class="even">
+<td width="25%" align="left" valign="top">
+Prototype
+</td>
+<td width="75%" align="left" valign="top">
+<b>
+void APGS_terminate(void)
+</b>
+
+</td>
+
+</tr>
+<tr class="odd">
+<td width="25%" align="left" valign="top">
+Description
+</td>
+<td width="75%" align="left" valign="top">
+Termination entry point of generated code
+</td>
+
+</tr>
+<tr class="even">
+<td width="25%" align="left" valign="top">
+Timing
+</td>
+<td width="75%" align="left" valign="top">
+Must be called exactly once
+</td>
+
+</tr>
+<tr class="odd">
+<td width="25%" align="left" valign="top">
+Arguments
+</td>
+<td width="75%" align="left" valign="top">
+None
+</td>
+
+</tr>
+<tr class="even">
+<td width="25%" align="left" valign="top">
+Return value
+</td>
+<td width="75%" align="left" valign="top">
+None
+</td>
+
+</tr>
+<tr class="odd">
+<td width="25%" align="left" valign="top">
+Header file
+</td>
+<td width="75%" align="left" valign="top">
+<a href="APGS_h.html">APGS.h</a>
+</td>
+
+</tr>
+
+</table>
+<h3>
+<a name="sec_Inports">
+Inports
+</a>
+
+</h3>
+<span title="Click to shrink or expand table" onclick="rtwTableShrink(this)">[-]</span><table width="100%" class="AltRow FirstColumn" cellspacing="0">
+<tr class="heading">
+<th width="40%" align="left" valign="top">
+<b>
+Block Name
+</b>
+
+</th>
+<th width="25%" align="left" valign="top">
+<b>
+Code Identifier
+</b>
+
+</th>
+<th width="25%" align="left" valign="top">
+<b>
+Data Type
+</b>
+
+</th>
+<th width="10%" align="right" valign="top">
+<b>
+Dimension
+</b>
+
+</th>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:48')" name="code2model" class="code2model">&lt;Root&gt;/edgDetStartFlg</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.edgDetStartFlg
+</td>
+<td width="25%" align="left" valign="top">
+uint16_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:88')" name="code2model" class="code2model">&lt;Root&gt;/wheel_R</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.wheel_R
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:89')" name="code2model" class="code2model">&lt;Root&gt;/wheel_L</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.wheel_L
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:112')" name="code2model" class="code2model">&lt;Root&gt;/gear_pos</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.gear_pos
+</td>
+<td width="25%" align="left" valign="top">
+uint16_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:198')" name="code2model" class="code2model">&lt;Root&gt;/front_right</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.front_right
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:400')" name="code2model" class="code2model">&lt;Root&gt;/ultraSonic_RCL</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.ultraSonic_RCL
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:401')" name="code2model" class="code2model">&lt;Root&gt;/ultraSonic_RML</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.ultraSonic_RML
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:402')" name="code2model" class="code2model">&lt;Root&gt;/ultraSonic_RMR</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.ultraSonic_RMR
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:403')" name="code2model" class="code2model">&lt;Root&gt;/ultraSonic_RCR</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.ultraSonic_RCR
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:404')" name="code2model" class="code2model">&lt;Root&gt;/ultraSonic_FCL</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.ultraSonic_FCL
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:405')" name="code2model" class="code2model">&lt;Root&gt;/ultraSonic_FML</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.ultraSonic_FML
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:406')" name="code2model" class="code2model">&lt;Root&gt;/ultraSonic_FMR</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.ultraSonic_FMR
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:407')" name="code2model" class="code2model">&lt;Root&gt;/ultraSonic_FCR</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.ultraSonic_FCR
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:645')" name="code2model" class="code2model">&lt;Root&gt;/parkMode</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.parkMode
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:777')" name="code2model" class="code2model">&lt;Root&gt;/SAngle</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.SAngle
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:809')" name="code2model" class="code2model">&lt;Root&gt;/back_right</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_U.back_right
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+
+</table>
+<h3>
+<a name="sec_Outports">
+Outports
+</a>
+
+</h3>
+<p>
+No Outports in model.
+</p>
+<h3>
+<a name="sec_Interface_Parameters">
+Interface Parameters
+</a>
+
+</h3>
+<span title="Click to shrink or expand table" onclick="rtwTableShrink(this)">[-]</span><table width="100%" class="AltRow FirstColumn" cellspacing="0">
+<tr class="heading">
+<th width="40%" align="left" valign="top">
+<b>
+Parameter Source
+</b>
+
+</th>
+<th width="25%" align="left" valign="top">
+<b>
+Code Identifier
+</b>
+
+</th>
+<th width="25%" align="left" valign="top">
+<b>
+Data Type
+</b>
+
+</th>
+<th width="10%" align="right" valign="top">
+<b>
+Dimension
+</b>
+
+</th>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+carD
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.carD
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+carH
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.carH
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+carMSA
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.carMSA
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+carRmin
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.carRmin
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+carTread
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.carTread
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+carV
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.carV
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+carW
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.carW
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+carb0
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.carb0
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+carb1
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.carb1
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+carl
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.carl
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+pathPoint
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.pathPoint
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:792')" name="code2model" class="code2model">&lt;S11&gt;/Delay</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.Delay_InitialCondition
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:793')" name="code2model" class="code2model">&lt;S11&gt;/Delay1</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.Delay1_InitialCondition
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:621')" name="code2model" class="code2model">&lt;S1&gt;/IsMultiTurn</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.IsMultiTurn_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:638')" name="code2model" class="code2model">&lt;S1&gt;/IsSteerZeroCmd</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.IsSteerZeroCmd_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:622')" name="code2model" class="code2model">&lt;S1&gt;/LHPResult</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.LHPResult_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:623')" name="code2model" class="code2model">&lt;S1&gt;/MsgForUI</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.MsgForUI_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:175')" name="code2model" class="code2model">&lt;S1&gt;/angle</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.angle_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:762')" name="code2model" class="code2model">&lt;S1&gt;/backIn_step</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.backIn_step_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:220')" name="code2model" class="code2model">&lt;S1&gt;/edg_info</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.edg_info_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+[3  30]
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:495')" name="code2model" class="code2model">&lt;S1&gt;/final_steer</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.final_steer_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:221')" name="code2model" class="code2model">&lt;S1&gt;/first_edg_pos</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.first_edg_pos_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:216')" name="code2model" class="code2model">&lt;S1&gt;/moving_distance</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.moving_distance_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:459')" name="code2model" class="code2model">&lt;S1&gt;/multiShift</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.multiShift_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:218')" name="code2model" class="code2model">&lt;S1&gt;/parking_m</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.parking_m_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:219')" name="code2model" class="code2model">&lt;S1&gt;/parking_n</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.parking_n_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:223')" name="code2model" class="code2model">&lt;S1&gt;/parking_space</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.parking_space_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:222')" name="code2model" class="code2model">&lt;S1&gt;/second_edg_pos</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.second_edg_pos_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:458')" name="code2model" class="code2model">&lt;S1&gt;/turningStep</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.turningStep_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:234')" name="code2model" class="code2model">&lt;S1&gt;/vld_status</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.vld_status_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:173')" name="code2model" class="code2model">&lt;S1&gt;/x_pos</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.x_pos_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:174')" name="code2model" class="code2model">&lt;S1&gt;/y_pos</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.y_pos_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:176')" name="code2model" class="code2model">&lt;S1&gt;/yaw_odm</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.yaw_odm_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:494')" name="code2model" class="code2model">&lt;S1&gt;/steer_cmd</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.steer_cmd_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+int32_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:792')" name="code2model" class="code2model">&lt;S11&gt;/Delay</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.Delay_DelayLength
+</td>
+<td width="25%" align="left" valign="top">
+uint32_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:793')" name="code2model" class="code2model">&lt;S11&gt;/Delay1</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.Delay1_DelayLength
+</td>
+<td width="25%" align="left" valign="top">
+uint32_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:61')" name="code2model" class="code2model">&lt;S1&gt;/ActLevel</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.ActLevel_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+uint16_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:211')" name="code2model" class="code2model">&lt;S1&gt;/edg_count</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.edg_count_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+uint16_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:214')" name="code2model" class="code2model">&lt;S1&gt;/int_count</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.int_count_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+uint16_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:637')" name="code2model" class="code2model">&lt;S1&gt;/IsParallelOk</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.IsParallelOk_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+uint8_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:634')" name="code2model" class="code2model">&lt;S1&gt;/edg1_cnt</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.edg1_cnt_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+uint8_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:213')" name="code2model" class="code2model">&lt;S1&gt;/edg1_stage</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.edg1_stage_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+uint8_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:633')" name="code2model" class="code2model">&lt;S1&gt;/edg2_cnt</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.edg2_cnt_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+uint8_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:240')" name="code2model" class="code2model">&lt;S1&gt;/edgEndFlg</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.edgEndFlg_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+uint8_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:233')" name="code2model" class="code2model">&lt;S1&gt;/edg_flg</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.edg_flg_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+uint8_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:631')" name="code2model" class="code2model">&lt;S1&gt;/steerTurnCnt</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.steerTurnCnt_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+uint8_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="40%" align="left" valign="top">
+<a href="matlab:coder.internal.code2model('APGS:632')" name="code2model" class="code2model">&lt;S1&gt;/steerTurnCnt_old</a>
+</td>
+<td width="25%" align="left" valign="top">
+APGS_P.steerTurnCnt_old_InitialValue
+</td>
+<td width="25%" align="left" valign="top">
+uint8_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+
+</table>
+<h3>
+<a name="sec_Data_Stores">
+Data Stores
+</a>
+
+</h3>
+<p>
+No data stores in the model; note that this report lists only data stores with non-auto storage class and global data stores
+</p>
+
+</body>
+
+</html>

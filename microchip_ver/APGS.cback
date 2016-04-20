@@ -1,0 +1,1906 @@
+/*
+ * File: APGS.c
+ *
+ * Code generated for Simulink model 'APGS'.
+ *
+ * Model version                  : 1.684
+ * Simulink Coder version         : 8.7 (R2014b) 08-Sep-2014
+ * C/C++ source code generated on : Sun Mar 01 17:45:25 2015
+ *
+ * Target selection: ert.tlc
+ * Embedded hardware selection: 32-bit Generic
+ * Emulation hardware selection:
+ *    Differs from embedded hardware (Microchip->dsPIC)
+ * Code generation objectives: Unspecified
+ * Validation result: Not run
+ */
+
+#include "APGS.h"
+#include "APGS_private.h"
+
+/* Named constants for Chart: '<S7>/APGS_FlowAction' */
+#define APGS_IN_Action1                ((uint8_T)1U)
+#define APGS_IN_Action2                ((uint8_T)2U)
+#define APGS_IN_Action2_back_in        ((uint8_T)3U)
+#define APGS_IN_Action3                ((uint8_T)4U)
+#define APGS_IN_Action3_back_in        ((uint8_T)5U)
+#define APGS_IN_Action4                ((uint8_T)6U)
+#define APGS_IN_Action5                ((uint8_T)7U)
+#define APGS_IN_NO_ACTIVE_CHILD        ((uint8_T)0U)
+#define APGS_IN_Parameter              ((uint8_T)8U)
+
+/* Block signals (auto storage) */
+B_APGS_T APGS_B;
+
+/* Block states (auto storage) */
+DW_APGS_T APGS_DW;
+
+/* External inputs (root inport signals with auto storage) */
+ExtU_APGS_T APGS_U;
+
+/* Real-time model */
+RT_MODEL_APGS_T APGS_M_;
+RT_MODEL_APGS_T *const APGS_M = &APGS_M_;
+
+/* Forward declaration for local functions */
+static void APGS_validate_parkng_space(real_T x1, uint16_T gearPos, real_T
+  parkmode, real_T back_n);
+static void APGS_get_second_pos(void);
+static void APGS_edge1_Det(real_T x1, real_T x1_old, real_T b_y1, real_T y1_old,
+  real_T right);
+static void APGS_get_first_pos(void);
+static void APGS_edge0_Det(real_T x1, real_T x1_old, real_T b_y1, real_T y1_old,
+  real_T right, real_T parkMode);
+
+/* Function for Chart: '<S11>/edgDetCalc' */
+static void APGS_validate_parkng_space(real_T x1, uint16_T gearPos, real_T
+  parkmode, real_T back_n)
+{
+  int16_T validation_space;
+
+  /* MATLAB Function 'validate_parkng_space': '<S17>:97' */
+  /*  Global variable for x y right information */
+  /*  Flag for edage index */
+  /* '<S17>:97:17' */
+  /* '<S17>:97:18' */
+  /* DEFUALT = 0; */
+  /* '<S17>:97:20' */
+  /* '<S17>:97:21' */
+  /* '<S17>:97:22' */
+  /*  Postion of right side ultrasonic */
+  /* '<S17>:97:23' */
+  /* '<S17>:97:24' */
+  /* '<S17>:97:25' */
+  /* '<S17>:97:26' */
+  /* '<S17>:97:27' */
+  /* '<S17>:97:28' */
+  /*  Width of car add 1m */
+  /* '<S17>:97:29' */
+  /* '<S17>:97:30' */
+  /* '<S17>:97:31' */
+  validation_space = (int16_T)0;
+
+  /* ZERO = 0; */
+  /* '<S17>:97:33' */
+  /* ------------Check Parking Mode --------------------------------- */
+  if (parkmode == 1.0) {
+    /* '<S17>:97:36' */
+    /* '<S17>:97:37' */
+    validation_space = 400;
+  } else {
+    if (parkmode == 2.0) {
+      /* '<S17>:97:38' */
+      /* '<S17>:97:39' */
+      validation_space = 100;
+    }
+  }
+
+  if (APGS_DW.parking_space > ((real_T)validation_space)) {
+    /* '<S17>:97:42' */
+    /*  The length of Blue bird is 4.61 */
+    /* if(parking_space > 560) */
+    /*     parking_m =  edg_info(2,4)/100; % keep normal right side information if parking space is enough */
+    /* else */
+    /*     parking_m =  edg_info(2,4)/100 + 0.3; % Number 4 is selected as right side. 0.3 is to increase turn angle for small space */
+    /* end */
+    /* '<S17>:97:49' */
+    APGS_DW.parking_m = APGS_DW.edg_info[(int8_T)10] / 100.0;
+
+    /* '<S17>:97:50' */
+    APGS_DW.parking_n = ((x1 - APGS_DW.second_edg_pos) - 390.0) / 100.0;
+    if (APGS_DW.parking_n > 1.7) {
+      /* '<S17>:97:52' */
+      /* '<S17>:97:53' */
+      APGS_DW.vld_status = 1.0;
+
+      /* '<S17>:97:54' */
+      APGS_DW.MsgForUI = 4.0;
+    }
+  } else {
+    if (APGS_DW.parking_space < ((real_T)validation_space)) {
+      /* '<S17>:97:56' */
+      /* '<S17>:97:57' */
+      APGS_DW.vld_status = 2.0;
+
+      /* '<S17>:97:58' */
+      APGS_DW.edg_flg = 0U;
+
+      /* '<S17>:97:59' */
+      APGS_DW.second_edg_pos = 0.0;
+
+      /* '<S17>:97:60' */
+      APGS_DW.parking_space = 0.0;
+
+      /* '<S17>:97:61' */
+      APGS_DW.first_edg_pos = 0.0;
+    }
+  }
+
+  if (gearPos == ((uint16_T)119U)) {
+    /* '<S17>:97:64' */
+    /* R */
+    /* edg_flg = uint8(0); % Back to init  */
+    if (parkmode == 1.0) {
+      /* '<S17>:97:66' */
+      /* '<S17>:97:67' */
+      APGS_DW.ActLevel = (uint16_T)4U;
+      if (APGS_DW.parking_n < 1.7) {
+        /* '<S17>:97:68' */
+        /* (parking_n > 1.7 && parking_n < 2.5) */
+        /* '<S17>:97:69' */
+        APGS_DW.IsSteerZeroCmd = 1.0;
+
+        /* '<S17>:97:70' */
+        APGS_DW.ActLevel = (uint16_T)3U;
+
+        /* '<S17>:97:71' */
+        APGS_DW.MsgForUI = 5.0;
+      }
+    } else {
+      if (parkmode == 2.0) {
+        /* '<S17>:97:73' */
+        /* '<S17>:97:74' */
+        APGS_DW.ActLevel = (uint16_T)4U;
+        if (APGS_DW.parking_n < back_n) {
+          /* '<S17>:97:75' */
+          /* '<S17>:97:76' */
+          APGS_DW.IsSteerZeroCmd = 1.0;
+
+          /* '<S17>:97:77' */
+          APGS_DW.ActLevel = (uint16_T)6U;
+
+          /* '<S17>:97:78' */
+          APGS_DW.MsgForUI = 5.0;
+        }
+      }
+    }
+  }
+}
+
+/* Function for Chart: '<S11>/edgDetCalc' */
+static void APGS_get_second_pos(void)
+{
+  int16_T ix;
+  real_T xbar;
+  int16_T k;
+  real_T r;
+  real_T b_r;
+  uint32_T tmp;
+
+  /* MATLAB Function 'get_second_pos': '<S17>:84' */
+  /*  Global variable for x y right information */
+  /*  Counts for the data which being collected */
+  /*  Flag for edage index */
+  /* '<S17>:84:9' */
+  tmp = ((uint32_T)APGS_DW.edg_count) + 1UL;
+  if (((int32_T)tmp) > 65535L) {
+    tmp = 65535UL;
+  }
+
+  /* '<S17>:84:11' */
+  ix = (int16_T)0;
+  xbar = APGS_DW.edg_info[(int8_T)2];
+  for (k = (int8_T)0; k <= ((int8_T)28); k++) {
+    ix++;
+    xbar += APGS_DW.edg_info[(((int16_T)3) * ix) + ((int16_T)2)];
+  }
+
+  xbar /= 30.0;
+  ix = (int16_T)0;
+  r = APGS_DW.edg_info[(int8_T)2] - xbar;
+  r *= r;
+  for (k = (int8_T)0; k <= ((int8_T)28); k++) {
+    ix++;
+    b_r = APGS_DW.edg_info[(((int16_T)3) * ix) + ((int16_T)2)] - xbar;
+    r += b_r * b_r;
+  }
+
+  r /= 29.0;
+  APGS_DW.veh_wheel_std = sqrt(r);
+  if (((uint16_T)tmp) < ((uint16_T)30U)) {
+    /* '<S17>:84:13' */
+    /* '<S17>:84:14' */
+    APGS_DW.second_edg_pos = APGS_DW.edg_info[(((int16_T)tmp) - ((int16_T)1)) *
+      ((int16_T)3)];
+  } else {
+    /* '<S17>:84:16' */
+    APGS_DW.second_edg_pos = APGS_DW.edg_info[(int8_T)0];
+  }
+
+  /* '<S17>:84:19' */
+  APGS_DW.parking_space = APGS_DW.second_edg_pos - APGS_DW.first_edg_pos;
+
+  /*  The value 130 which is got from try and error */
+  /* '<S17>:84:21' */
+  APGS_DW.edg_flg = 4U;
+}
+
+/* Function for Chart: '<S11>/edgDetCalc' */
+static void APGS_edge1_Det(real_T x1, real_T x1_old, real_T b_y1, real_T y1_old,
+  real_T right)
+{
+  real_T D;
+  uint16_T tmp_count1;
+  real_T b_a;
+  uint32_T tmp;
+
+  /* MATLAB Function 'edge1_Det': '<S17>:63' */
+  /*  Global variable for x y right information */
+  /*  Counts for the data which being collected */
+  /*  Flag for edage index */
+  /*  moving distance */
+  /* '<S17>:63:16' */
+  /* tmp_count1 = uint16(0);  */
+  /* '<S17>:63:22' */
+  D = x1 - x1_old;
+  b_a = b_y1 - y1_old;
+  D = sqrt((D * D) + (b_a * b_a));
+
+  /*  Distance between current and last step  */
+  /* '<S17>:63:23' */
+  APGS_DW.edg_info[((int16_T)3) * (((int16_T)APGS_DW.edg_count) - ((int16_T)1))]
+    = x1;
+
+  /*  Store x poistion */
+  /* '<S17>:63:24' */
+  APGS_DW.edg_info[((int16_T)1) + (((int16_T)3) * (((int16_T)APGS_DW.edg_count)
+    - ((int16_T)1)))] = right;
+
+  /*  Store right_side =  */
+  /* '<S17>:63:25' */
+  APGS_DW.edg_info[((int16_T)2) + (((int16_T)3) * (((int16_T)APGS_DW.edg_count)
+    - ((int16_T)1)))] = D;
+
+  /*  Store related distance  */
+  if (D > 0.0) {
+    /* '<S17>:63:27' */
+    /*  4.16 is experiance value */
+    /* '<S17>:63:28' */
+    tmp_count1 = APGS_DW.edg_count - ((uint16_T)1U);
+    if (tmp_count1 > APGS_DW.edg_count) {
+      tmp_count1 = (uint16_T)0U;
+    }
+
+    if (tmp_count1 == ((uint16_T)0U)) {
+      /* '<S17>:63:29' */
+      /* '<S17>:63:30' */
+      tmp_count1 = (uint16_T)30U;
+    }
+
+    /* ---------Accumulate moving distance-----------------------------     */
+    /* '<S17>:63:34' */
+    APGS_DW.moving_distance += D;
+    if (APGS_DW.moving_distance > 2000.0) {
+      /* '<S17>:63:35' */
+      /* '<S17>:63:36' */
+      APGS_DW.vld_status = 2.0;
+
+      /*  error: can not find second edge */
+      /* '<S17>:63:37' */
+      APGS_DW.edg_flg = 4U;
+
+      /*  Jump to case 4 */
+      /* '<S17>:63:38' */
+      APGS_DW.moving_distance = 0.0;
+
+      /*  Reset  */
+    }
+
+    /* ---------Firs Step is to check edge1 whether is exist? */
+    if (((APGS_DW.edg_info[((((int16_T)APGS_DW.edg_count) - ((int16_T)1)) *
+                            ((int16_T)3)) + ((int16_T)1)] <= 200.0) &&
+         (APGS_DW.edg_info[((((int16_T)tmp_count1) - ((int16_T)1)) * ((int16_T)3))
+          + ((int16_T)1)] >= 200.0)) && (((int16_T)APGS_DW.edg1_stage) ==
+         ((int16_T)0))) {
+      /* '<S17>:63:42' */
+      /* '<S17>:63:43' */
+      APGS_DW.edg1_stage = 1U;
+    }
+
+    /* --------Get into second stage----------------------------- */
+    if (((int16_T)APGS_DW.edg1_stage) == ((int16_T)1)) {
+      /* '<S17>:63:47' */
+      if (((int16_T)APGS_DW.edg2_cnt) < ((int16_T)10)) {
+        /* '<S17>:63:48' */
+        /* --------Reset if small parking space---------------------------  */
+        /* '<S17>:63:50' */
+        APGS_DW.edg2_cnt = 0U;
+
+        /* '<S17>:63:51' */
+        APGS_DW.vld_status = 0.0;
+
+        /* '<S17>:63:52' */
+        APGS_DW.edg_flg = 0U;
+
+        /* '<S17>:63:53' */
+        memset(&APGS_DW.edg_info[0L], 0, ((uint16_T)90U) * (sizeof(real_T)));
+
+        /* '<S17>:63:54' */
+        APGS_DW.edg_count = (uint16_T)1U;
+
+        /* '<S17>:63:55' */
+        APGS_DW.first_edg_pos = 0.0;
+
+        /* '<S17>:63:56' */
+        APGS_DW.second_edg_pos = 0.0;
+
+        /* '<S17>:63:57' */
+        APGS_DW.parking_space = 0.0;
+
+        /* '<S17>:63:58' */
+        APGS_DW.edg1_stage = 0U;
+
+        /* '<S17>:63:59' */
+        APGS_DW.x_pos = 0.0;
+
+        /* '<S17>:63:60' */
+        APGS_DW.y_pos = 0.0;
+
+        /* '<S17>:63:61' */
+        APGS_DW.edg1_cnt = 0U;
+      }
+
+      /* '<S17>:63:64' */
+      tmp = ((uint32_T)APGS_DW.int_count) + 1UL;
+      if (((int32_T)tmp) > 65535L) {
+        tmp = 65535UL;
+      }
+
+      APGS_DW.int_count = (uint16_T)tmp;
+
+      /*  Start count to 30 once edge 1 detected */
+      if (APGS_DW.int_count == ((uint16_T)30U)) {
+        /* '<S17>:63:65' */
+        /* '<S17>:63:66' */
+        APGS_DW.edg_flg = 3U;
+
+        /* '<S17>:63:67' */
+        APGS_DW.edg1_stage = 0U;
+      }
+    }
+
+    /* '<S17>:63:73' */
+    tmp = ((uint32_T)APGS_DW.edg_count) + 1UL;
+    if (((int32_T)tmp) > 65535L) {
+      tmp = 65535UL;
+    }
+
+    APGS_DW.edg_count = (uint16_T)tmp;
+
+    /*  Counts if D > 4.16 */
+    if (((int16_T)APGS_DW.edg2_cnt) < ((int16_T)40)) {
+      /* '<S17>:63:74' */
+      /* '<S17>:63:75' */
+      tmp_count1 = ((uint16_T)APGS_DW.edg2_cnt) + ((uint8_T)1U);
+      if (tmp_count1 > ((uint16_T)255U)) {
+        tmp_count1 = (uint16_T)255U;
+      }
+
+      APGS_DW.edg2_cnt = (uint8_T)tmp_count1;
+    }
+
+    if (APGS_DW.edg_count > ((uint16_T)30U)) {
+      /* '<S17>:63:77' */
+      /*  Reset index to zero if over max range 31 */
+      /* '<S17>:63:78' */
+      APGS_DW.edg_count = (uint16_T)1U;
+    }
+  }
+
+  /*  end if (D > 4.16) */
+}
+
+/* Function for Chart: '<S11>/edgDetCalc' */
+static void APGS_get_first_pos(void)
+{
+  uint16_T qY;
+
+  /* MATLAB Function 'get_first_pos': '<S17>:49' */
+  /*  Global variable for x y right information */
+  /*  Counts for the data which being collected */
+  /*  Flag for edage index */
+  /* '<S17>:49:7' */
+  /* '<S17>:49:14' */
+  qY = APGS_DW.edg_count - ((uint16_T)2U);
+  if (qY > APGS_DW.edg_count) {
+    qY = (uint16_T)0U;
+  }
+
+  APGS_DW.first_edg_pos = APGS_DW.edg_info[(((int16_T)qY) - ((int16_T)1)) *
+    ((int16_T)3)];
+
+  /*  -1 is to fixed the dummy at last step in edge0_Det function */
+  /* '<S17>:49:17' */
+  APGS_DW.int_count = (uint16_T)1U;
+
+  /* '<S17>:49:18' */
+  APGS_DW.edg_flg = 2U;
+}
+
+/* Function for Chart: '<S11>/edgDetCalc' */
+static void APGS_edge0_Det(real_T x1, real_T x1_old, real_T b_y1, real_T y1_old,
+  real_T right, real_T parkMode)
+{
+  real_T D;
+  uint16_T edg_ck_count;
+  real_T b_a;
+  int16_T exitg1;
+  uint32_T tmp;
+  uint16_T qY;
+
+  /* MATLAB Function 'edge0_Det': '<S17>:18' */
+  /*  Global variable for x y right information */
+  /*  Counts for the data which being collected */
+  /*  Flag for edage index */
+  /* '<S17>:18:11' */
+  APGS_DW.int_count = (uint16_T)1U;
+
+  /*  interal count */
+  /* '<S17>:18:13' */
+  D = x1 - x1_old;
+  b_a = b_y1 - y1_old;
+  D = sqrt((D * D) + (b_a * b_a));
+
+  /*  Distance between current and last step  */
+  /* '<S17>:18:14' */
+  APGS_DW.edg_info[((int16_T)3) * (((int16_T)APGS_DW.edg_count) - ((int16_T)1))]
+    = x1;
+
+  /*  Store x poistion */
+  /* '<S17>:18:15' */
+  APGS_DW.edg_info[((int16_T)1) + (((int16_T)3) * (((int16_T)APGS_DW.edg_count)
+    - ((int16_T)1)))] = right;
+
+  /*  Store right_side =  */
+  /* '<S17>:18:16' */
+  APGS_DW.edg_info[((int16_T)2) + (((int16_T)3) * (((int16_T)APGS_DW.edg_count)
+    - ((int16_T)1)))] = D;
+
+  /*  Store related distance  */
+  /* '<S17>:18:17' */
+  APGS_DW.MsgForUI = parkMode;
+  if ((right < 200.0) && (((int16_T)APGS_DW.edg1_cnt) <= ((int16_T)5))) {
+    /* '<S17>:18:18' */
+    /* '<S17>:18:19' */
+    edg_ck_count = ((uint16_T)APGS_DW.edg1_cnt) + ((uint8_T)1U);
+    if (edg_ck_count > ((uint16_T)255U)) {
+      edg_ck_count = (uint16_T)255U;
+    }
+
+    APGS_DW.edg1_cnt = (uint8_T)edg_ck_count;
+  }
+
+  if ((D > 0.0) && (((int16_T)APGS_DW.edg1_cnt) >= ((int16_T)5))) {
+    /* '<S17>:18:22' */
+    /*  4.16 is experiance value */
+    if ((APGS_DW.edg_info[((((int16_T)APGS_DW.edg_count) - ((int16_T)1)) *
+                           ((int16_T)3)) + ((int16_T)1)] >= 200.0) && (((int16_T)
+          APGS_DW.edg_flg) == ((int16_T)0))) {
+      /* '<S17>:18:24' */
+      /*  Detect for Edge 0 */
+      /* '<S17>:18:25' */
+      edg_ck_count = APGS_DW.edg_count;
+      do {
+        exitg1 = (int16_T)0;
+
+        /*  find first edge */
+        /* '<S17>:18:27' */
+        qY = edg_ck_count - ((uint16_T)1U);
+        if (qY > edg_ck_count) {
+          qY = (uint16_T)0U;
+        }
+
+        edg_ck_count = qY;
+
+        /*  Back counts */
+        if (qY == ((uint16_T)0U)) {
+          /* '<S17>:18:29' */
+          /*  Pointthe count to max range 31, in case less than zero */
+          /* '<S17>:18:30' */
+          edg_ck_count = (uint16_T)30U;
+        }
+
+        if (APGS_DW.edg_info[((((int16_T)edg_ck_count) - ((int16_T)1)) *
+                              ((int16_T)3)) + ((int16_T)1)] <= 200.0) {
+          /* '<S17>:18:33' */
+          /*  First edge being found */
+          /* '<S17>:18:34' */
+          APGS_DW.edg_flg = 1U;
+
+          /*  set flag to edge 1   */
+          if ((APGS_DW.int_count >= ((uint16_T)30U)) || (APGS_DW.edg_info
+               [((((int16_T)edg_ck_count) - ((int16_T)1)) * ((int16_T)3)) +
+               ((int16_T)2)] == 0.0)) {
+            /* '<S17>:18:35' */
+            /*  Jump out of while if index over than max range 31    */
+            exitg1 = (int16_T)1;
+          } else {
+            /* '<S17>:18:42' */
+            tmp = ((uint32_T)APGS_DW.int_count) + 1UL;
+            if (((int32_T)tmp) > 65535L) {
+              tmp = 65535UL;
+            }
+
+            APGS_DW.int_count = (uint16_T)tmp;
+          }
+        } else {
+          exitg1 = (int16_T)1;
+        }
+      } while (exitg1 == ((int16_T)0));
+
+      /*  end while      */
+    }
+
+    /* end if (edg_info(2,edg_count) > 200 ?)  */
+    /* '<S17>:18:46' */
+    tmp = ((uint32_T)APGS_DW.edg_count) + 1UL;
+    if (((int32_T)tmp) > 65535L) {
+      tmp = 65535UL;
+    }
+
+    APGS_DW.edg_count = (uint16_T)tmp;
+
+    /*  Counts if D > 4.16 */
+    if (APGS_DW.edg_count > ((uint16_T)30U)) {
+      /* '<S17>:18:48' */
+      /*  Reset index to zero if over max range 31 */
+      /* '<S17>:18:49' */
+      APGS_DW.edg_count = (uint16_T)1U;
+    }
+  }
+
+  /*  end if (D > 4.16) */
+}
+
+real_T rt_roundd(real_T u)
+{
+  real_T y;
+  if (fabs(u) < 4.503599627370496E+15) {
+    if (u >= 0.5) {
+      y = floor(u + 0.5);
+    } else if (u > -0.5) {
+      y = 0.0;
+    } else {
+      y = ceil(u - 0.5);
+    }
+  } else {
+    y = u;
+  }
+
+  return y;
+}
+
+/* Model step function */
+void APGS_step(void)
+{
+  real_T Rs;
+  real_T L;
+  real_T mcarPHIS;
+  real_T mcarAlpha;
+  real_T mscan;
+  real_T mcot_Phi2;
+  real_T mcot_op_m2;
+  real_T msin_op2;
+  real_T mg;
+  real_T mXw2;
+  real_T mTurn_cmd;
+  real_T mPHI;
+  int16_T o_count;
+  int16_T ckRltPos;
+  real_T ddiff[100];
+  boolean_T exitg1;
+  int16_T pos_sign;
+  real_T avgD;
+  uint16_T tmp;
+
+  /* S-Function (fcncallgen): '<S2>/TriggerSrc' incorporates:
+   *  Chart: '<S1>/TaskScheduler'
+   */
+  /* Chart: '<S1>/TaskScheduler' incorporates:
+   *  Logic: '<S5>/Logical Operator'
+   */
+  /* Gateway: SchedulerAPGS/TaskScheduler */
+  if (((int16_T)APGS_DW.temporalCounter_i1) < ((int16_T)1)) {
+    APGS_DW.temporalCounter_i1 = (uint8_T)((int16_T)(((int16_T)
+      APGS_DW.temporalCounter_i1) + ((int16_T)1)));
+  }
+
+  /* Event: '<S3>:2' */
+  /* During: SchedulerAPGS/TaskScheduler */
+  if (APGS_DW.is_active_c3_APGS == ((uint8_T)0U)) {
+    /* Entry: SchedulerAPGS/TaskScheduler */
+    APGS_DW.is_active_c3_APGS = 1U;
+
+    /* Entry Internal: SchedulerAPGS/TaskScheduler */
+    /* Transition: '<S3>:23' */
+    APGS_DW.is_active_shcheduler = 1U;
+    APGS_DW.temporalCounter_i1 = 0U;
+  } else {
+    /* During 'shcheduler': '<S3>:9' */
+    if (((int16_T)APGS_DW.temporalCounter_i1) == ((int16_T)1)) {
+      /* Outputs for Function Call SubSystem: '<S1>/mainTask_function' */
+      /* Chart: '<S7>/APGS_FlowAction' incorporates:
+       *  Inport: '<Root>/edgDetStartFlg'
+       *  Inport: '<Root>/parkMode'
+       */
+      /* Event: '<S3>:5' */
+      /* Gateway: SchedulerAPGS/mainTask_function/AGPS_Action/APGS_FlowAction */
+      /* During: SchedulerAPGS/mainTask_function/AGPS_Action/APGS_FlowAction */
+      if (APGS_DW.is_active_c1_APGS == ((uint8_T)0U)) {
+        /* Entry: SchedulerAPGS/mainTask_function/AGPS_Action/APGS_FlowAction */
+        APGS_DW.is_active_c1_APGS = 1U;
+
+        /* Entry Internal: SchedulerAPGS/mainTask_function/AGPS_Action/APGS_FlowAction */
+        /* Transition: '<S13>:2' */
+        APGS_DW.is_c1_APGS = APGS_IN_Parameter;
+
+        /* Entry 'Parameter': '<S13>:1' */
+        APGS_DW.waitingMode = (uint16_T)1U;
+        APGS_DW.edgDetMode = (uint16_T)2U;
+        APGS_DW.pathCalcMode = (uint16_T)3U;
+        APGS_DW.steerMode = (uint16_T)4U;
+        APGS_DW.APGS_FINISH = (uint16_T)5U;
+        APGS_DW.parkingMode = (uint16_T)6U;
+        APGS_DW.enable = (uint16_T)1U;
+        APGS_DW.disable = (uint16_T)0U;
+        APGS_DW.ActLevel = APGS_DW.waitingMode;
+        APGS_B.PpathCalcFcn = APGS_DW.disable;
+        APGS_B.BpathCalcFcn = APGS_DW.disable;
+        APGS_B.edgDetFcn = APGS_DW.disable;
+        APGS_B.PparkingFlowFcn = APGS_DW.disable;
+        APGS_B.BparkingFlowFcn = APGS_DW.disable;
+      } else {
+        switch (APGS_DW.is_c1_APGS) {
+         case APGS_IN_Action1:
+          /* During 'Action1': '<S13>:4' */
+          if ((APGS_DW.ActLevel == APGS_DW.steerMode) && (APGS_U.parkMode == 1.0))
+          {
+            /* Transition: '<S13>:23' */
+            APGS_DW.is_c1_APGS = APGS_IN_Action2;
+
+            /* Entry 'Action2': '<S13>:22' */
+            APGS_B.steerCtlParkingFcn = APGS_DW.enable;
+          } else {
+            if ((APGS_DW.ActLevel == APGS_DW.steerMode) && (APGS_U.parkMode ==
+                 2.0)) {
+              /* Transition: '<S13>:41' */
+              APGS_DW.is_c1_APGS = APGS_IN_Action2_back_in;
+
+              /* Entry 'Action2_back_in': '<S13>:40' */
+              APGS_B.steerCtlParkingFcn = APGS_DW.enable;
+              APGS_B.BpathCalcFcn = APGS_DW.enable;
+            }
+          }
+          break;
+
+         case APGS_IN_Action2:
+          /* During 'Action2': '<S13>:22' */
+          if (APGS_DW.ActLevel == APGS_DW.pathCalcMode) {
+            /* Transition: '<S13>:20' */
+            APGS_DW.is_c1_APGS = APGS_IN_Action3;
+
+            /* Entry 'Action3': '<S13>:5' */
+            APGS_DW.x_pos = 0.0;
+            APGS_DW.y_pos = 0.0;
+            APGS_B.edgDetFcn = APGS_DW.disable;
+            APGS_B.PpathCalcFcn = APGS_DW.enable;
+          }
+          break;
+
+         case APGS_IN_Action2_back_in:
+          /* During 'Action2_back_in': '<S13>:40' */
+          if (APGS_DW.ActLevel == APGS_DW.parkingMode) {
+            /* Transition: '<S13>:45' */
+            APGS_DW.is_c1_APGS = APGS_IN_Action3_back_in;
+
+            /* Entry 'Action3_back_in': '<S13>:43' */
+            APGS_DW.x_pos = 0.0;
+            APGS_DW.y_pos = 0.0;
+            APGS_B.edgDetFcn = APGS_DW.disable;
+            APGS_B.BpathCalcFcn = APGS_DW.disable;
+            APGS_B.BparkingFlowFcn = APGS_DW.enable;
+          }
+          break;
+
+         case APGS_IN_Action3:
+          /* During 'Action3': '<S13>:5' */
+          if (APGS_DW.ActLevel == APGS_DW.parkingMode) {
+            /* Transition: '<S13>:33' */
+            APGS_DW.is_c1_APGS = APGS_IN_Action4;
+
+            /* Entry 'Action4': '<S13>:31' */
+            APGS_B.PpathCalcFcn = APGS_DW.disable;
+            APGS_B.PparkingFlowFcn = APGS_DW.enable;
+          }
+          break;
+
+         case APGS_IN_Action3_back_in:
+          /* During 'Action3_back_in': '<S13>:43' */
+          if (APGS_DW.ActLevel == APGS_DW.APGS_FINISH) {
+            /* Transition: '<S13>:46' */
+            APGS_DW.is_c1_APGS = APGS_IN_Action5;
+
+            /* Entry 'Action5': '<S13>:28' */
+            APGS_B.steerCtlParkingFcn = APGS_DW.disable;
+          }
+          break;
+
+         case APGS_IN_Action4:
+          /* During 'Action4': '<S13>:31' */
+          if (APGS_DW.ActLevel == APGS_DW.APGS_FINISH) {
+            /* Transition: '<S13>:29' */
+            APGS_DW.is_c1_APGS = APGS_IN_Action5;
+
+            /* Entry 'Action5': '<S13>:28' */
+            APGS_B.steerCtlParkingFcn = APGS_DW.disable;
+          }
+          break;
+
+         case APGS_IN_Action5:
+          /* During 'Action5': '<S13>:28' */
+          break;
+
+         default:
+          /* During 'Parameter': '<S13>:1' */
+          if ((APGS_U.edgDetStartFlg == APGS_DW.enable) && (APGS_DW.ActLevel ==
+               APGS_DW.waitingMode)) {
+            /* Transition: '<S13>:6' */
+            APGS_DW.is_c1_APGS = APGS_IN_Action1;
+
+            /* Entry 'Action1': '<S13>:4' */
+            APGS_DW.ActLevel = APGS_DW.edgDetMode;
+            APGS_B.edgDetFcn = APGS_DW.enable;
+          }
+          break;
+        }
+      }
+
+      /* End of Chart: '<S7>/APGS_FlowAction' */
+
+      /* Outputs for Enabled SubSystem: '<S4>/CalParkingPath_BackIn' incorporates:
+       *  EnablePort: '<S8>/Enable'
+       */
+      if (APGS_B.BpathCalcFcn > ((uint16_T)0U)) {
+        /* MATLAB Function: '<S8>/get_park_n_Fcn' incorporates:
+         *  Constant: '<S8>/carRmin'
+         *  Constant: '<S8>/carW'
+         */
+        /* MATLAB Function 'SchedulerAPGS/mainTask_function/CalParkingPath_BackIn/get_park_n_Fcn': '<S14>:1' */
+        /* '<S14>:1:4' */
+        /* '<S14>:1:5' */
+        /* ---------Start to calculate------------------ */
+        /* '<S14>:1:7' */
+        Rs = APGS_P.carRmin - APGS_P.carW;
+
+        /* '<S14>:1:8' */
+        L = Rs - APGS_DW.parking_m;
+
+        /* '<S14>:1:9' */
+        APGS_B.backIn_park_n = (sqrt((Rs * Rs) - (L * L)) - 1.0) - 0.2;
+      }
+
+      /* End of Outputs for SubSystem: '<S4>/CalParkingPath_BackIn' */
+
+      /* Outputs for Enabled SubSystem: '<S4>/edgDetCalc1' incorporates:
+       *  EnablePort: '<S11>/Enable'
+       */
+      if (APGS_B.edgDetFcn > ((uint16_T)0U)) {
+        /* DataStoreRead: '<S11>/x_pos_LR' */
+        Rs = APGS_DW.x_pos;
+
+        /* DataStoreRead: '<S11>/y_pos' */
+        L = APGS_DW.y_pos;
+
+        /* Chart: '<S11>/edgDetCalc' incorporates:
+         *  DataStoreRead: '<S11>/x_pos_LR'
+         *  DataStoreRead: '<S11>/y_pos'
+         *  Delay: '<S11>/Delay'
+         *  Delay: '<S11>/Delay1'
+         *  Inport: '<Root>/front_right'
+         *  Inport: '<Root>/gear_pos'
+         *  Inport: '<Root>/parkMode'
+         */
+        /* Gateway: SchedulerAPGS/mainTask_function/edgDetCalc1/edgDetCalc */
+        /* During: SchedulerAPGS/mainTask_function/edgDetCalc1/edgDetCalc */
+        /* Entry Internal: SchedulerAPGS/mainTask_function/edgDetCalc1/edgDetCalc */
+        /* Transition: '<S17>:2' */
+        if (((int16_T)APGS_DW.edg_flg) == ((int16_T)0)) {
+          /* Transition: '<S17>:3' */
+          /* Transition: '<S17>:5' */
+          APGS_edge0_Det(APGS_DW.x_pos, APGS_DW.Delay_DSTATE, APGS_DW.y_pos,
+                         APGS_DW.Delay1_DSTATE, APGS_U.front_right,
+                         APGS_U.parkMode);
+
+          /* Transition: '<S17>:30' */
+          /* Transition: '<S17>:41' */
+          /* Transition: '<S17>:45' */
+          /* Transition: '<S17>:64' */
+          /* Transition: '<S17>:79' */
+          /* Transition: '<S17>:91' */
+          /* Transition: '<S17>:93' */
+        } else {
+          /* Transition: '<S17>:35' */
+          if (((int16_T)APGS_DW.edg_flg) == ((int16_T)1)) {
+            /* Transition: '<S17>:33' */
+            /* Transition: '<S17>:37' */
+            APGS_get_first_pos();
+
+            /* Transition: '<S17>:39' */
+            /* Transition: '<S17>:45' */
+            /* Transition: '<S17>:64' */
+            /* Transition: '<S17>:79' */
+            /* Transition: '<S17>:91' */
+            /* Transition: '<S17>:93' */
+          } else {
+            /* Transition: '<S17>:50' */
+            if (((int16_T)APGS_DW.edg_flg) == ((int16_T)2)) {
+              /* Transition: '<S17>:52' */
+              /* Transition: '<S17>:54' */
+              APGS_edge1_Det(APGS_DW.x_pos, APGS_DW.Delay_DSTATE, APGS_DW.y_pos,
+                             APGS_DW.Delay1_DSTATE, APGS_U.front_right);
+
+              /* Transition: '<S17>:56' */
+              /* Transition: '<S17>:64' */
+              /* Transition: '<S17>:79' */
+              /* Transition: '<S17>:91' */
+              /* Transition: '<S17>:93' */
+            } else {
+              /* Transition: '<S17>:68' */
+              if (((int16_T)APGS_DW.edg_flg) == ((int16_T)3)) {
+                /* Transition: '<S17>:74' */
+                /* Transition: '<S17>:76' */
+                APGS_get_second_pos();
+
+                /* Transition: '<S17>:78' */
+                /* Transition: '<S17>:79' */
+                /* Transition: '<S17>:91' */
+                /* Transition: '<S17>:93' */
+              } else {
+                /* Transition: '<S17>:11' */
+                if (((int16_T)APGS_DW.edg_flg) == ((int16_T)4)) {
+                  /* Transition: '<S17>:86' */
+                  /* Transition: '<S17>:88' */
+                  APGS_validate_parkng_space(APGS_DW.x_pos, APGS_U.gear_pos,
+                    APGS_U.parkMode, APGS_B.backIn_park_n);
+
+                  /* Transition: '<S17>:90' */
+                  /* Transition: '<S17>:91' */
+                  /* Transition: '<S17>:93' */
+                } else {
+                  /* Transition: '<S17>:83' */
+                }
+              }
+            }
+          }
+        }
+
+        /* End of Chart: '<S11>/edgDetCalc' */
+
+        /* Update for Delay: '<S11>/Delay' */
+        /* Transition: '<S17>:94' */
+        APGS_DW.Delay_DSTATE = Rs;
+
+        /* Update for Delay: '<S11>/Delay1' */
+        APGS_DW.Delay1_DSTATE = L;
+      }
+
+      /* End of Outputs for SubSystem: '<S4>/edgDetCalc1' */
+
+      /* Outputs for Enabled SubSystem: '<S12>/BparkingFow' incorporates:
+       *  EnablePort: '<S18>/Enable'
+       */
+      if (APGS_B.BparkingFlowFcn > ((uint16_T)0U)) {
+        /* MATLAB Function: '<S18>/BparkingFlowFcn' incorporates:
+         *  Inport: '<Root>/gear_pos'
+         *  Inport: '<Root>/ultraSonic_RCL'
+         *  Inport: '<Root>/ultraSonic_RCR'
+         *  Inport: '<Root>/ultraSonic_RML'
+         *  Inport: '<Root>/ultraSonic_RMR'
+         */
+        /* MATLAB Function 'SchedulerAPGS/mainTask_function/parkingStrategy/BparkingFow/BparkingFlowFcn': '<S20>:1' */
+        /*  ----- Initial Parameter ------------------- */
+        /* -------------------------------------------- */
+        /* '<S20>:1:12' */
+        /* uint:  */
+        /* '<S20>:1:13' */
+        /* '<S20>:1:14' */
+        /* '<S20>:1:16' */
+        /*  Display blank */
+        /* '<S20>:1:18' */
+        /*  Show message shift gear to forward */
+        /*  Show message shift gear to reverse */
+        /* '<S20>:1:21' */
+        /* '<S20>:1:22' */
+        /* '<S20>:1:23' */
+        if (((((((APGS_U.ultraSonic_RCL <= 30.0) || (APGS_U.ultraSonic_RML <=
+                  30.0)) || (APGS_U.ultraSonic_RMR <= 30.0)) ||
+               (APGS_U.ultraSonic_RCR <= 30.0)) && (APGS_DW.multiShift == 0.0)) &&
+             (((int16_T)APGS_DW.backIn_step) == ((int16_T)0))) &&
+            (APGS_U.gear_pos != ((uint16_T)81U))) {
+          /* '<S20>:1:26' */
+          /*  Objects detected from rear when backing */
+          /* '<S20>:1:27' */
+          /* '<S20>:1:28' */
+          APGS_DW.multiShift = 1.0;
+
+          /*  Set flg to forward */
+          /* '<S20>:1:29' */
+          APGS_DW.MsgForUI = 1.0;
+
+          /* '<S20>:1:30' */
+          APGS_DW.backIn_step = 1U;
+        }
+
+        if ((((int16_T)APGS_DW.backIn_step) == ((int16_T)1)) && (APGS_DW.yaw_odm
+             < -80.0)) {
+          /* '<S20>:1:34' */
+          /* '<S20>:1:35' */
+          APGS_DW.backIn_step = 2U;
+        }
+
+        /* End of MATLAB Function: '<S18>/BparkingFlowFcn' */
+      }
+
+      /* End of Outputs for SubSystem: '<S12>/BparkingFow' */
+
+      /* Outputs for Enabled SubSystem: '<S4>/CalParkingPath_Parallel' incorporates:
+       *  EnablePort: '<S9>/Enable'
+       */
+      if (APGS_B.PpathCalcFcn > ((uint16_T)0U)) {
+        /* MATLAB Function: '<S9>/get_Rs_Fcn' incorporates:
+         *  Constant: '<S9>/carD'
+         *  Constant: '<S9>/carH'
+         *  Constant: '<S9>/carMSA'
+         *  Constant: '<S9>/carRmin'
+         *  Constant: '<S9>/carTread'
+         *  Constant: '<S9>/carV'
+         *  Constant: '<S9>/carW'
+         *  Constant: '<S9>/carb0'
+         *  Constant: '<S9>/carb1'
+         *  Constant: '<S9>/carl'
+         *  Constant: '<S9>/pathPoint'
+         */
+        /* MATLAB Function 'SchedulerAPGS/mainTask_function/CalParkingPath_Parallel/get_Rs_Fcn': '<S15>:1' */
+        /* '<S15>:1:7' */
+        /* '<S15>:1:9' */
+        Rs = (((((((APGS_P.carH + APGS_DW.parking_n) + APGS_P.carb0) *
+                  ((APGS_P.carH + APGS_DW.parking_n) + APGS_P.carb0)) -
+                 (((APGS_DW.parking_m + APGS_P.carD) - APGS_P.carb1) * (2.0 *
+                   APGS_P.carRmin))) + (((APGS_DW.parking_m + APGS_P.carD) -
+                  APGS_P.carb1) * ((APGS_DW.parking_m + APGS_P.carD) -
+                  APGS_P.carb1))) / 2.0) / ((APGS_DW.parking_m + APGS_P.carD) -
+               APGS_P.carb1)) + (APGS_P.carW / 2.0);
+
+        /* '<S15>:1:10' */
+        /* '<S15>:1:11' */
+        mcarPHIS = atan(APGS_P.carl / ((APGS_P.carTread / 2.0) + Rs));
+
+        /* '<S15>:1:12' */
+        mcarAlpha = asin(((APGS_P.carH + APGS_DW.parking_n) + APGS_P.carb0) /
+                         (APGS_P.carRmin + Rs));
+
+        /* '<S15>:1:13' */
+        /* '<S15>:1:14' */
+        /* '<S15>:1:15' */
+        Rs = fabs((Rs * mcarAlpha) / APGS_P.carV);
+
+        /* '<S15>:1:16' */
+        L = fabs((APGS_P.carRmin * mcarAlpha) / APGS_P.carV);
+
+        /* '<S15>:1:17' */
+        mscan = (Rs + L) / APGS_P.pathPoint;
+
+        /* '<S15>:1:20' */
+        mcot_Phi2 = cos(mcarPHIS) / sin(mcarPHIS);
+
+        /* '<S15>:1:21' */
+        mcot_op_m2 = APGS_P.carl * mcot_Phi2;
+
+        /* '<S15>:1:22' */
+        msin_op2 = (APGS_P.carV * sin(mcarPHIS)) / APGS_P.carl;
+
+        /* '<S15>:1:23' */
+        mg = 1.0;
+
+        /* '<S15>:1:25' */
+        memset(&APGS_B.mtp[0L], 0, (sizeof(real_T)) << ((uint8_T)8U));
+
+        /* '<S15>:1:26' */
+        pos_sign = (int16_T)((real_T)((Rs + mscan) / mscan));
+
+        /* '<S15>:1:26' */
+        for (o_count = (int16_T)0; o_count <= (pos_sign - ((int16_T)1)); o_count
+             ++) {
+          /* '<S15>:1:26' */
+          Rs = ((real_T)o_count) * mscan;
+
+          /* '<S15>:1:27' */
+          /* '<S15>:1:28' */
+          /* '<S15>:1:29' */
+          /* '<S15>:1:30' */
+          /* '<S15>:1:31' */
+          APGS_B.mtp[((int16_T)mg) - ((int16_T)1)] = -(sin(msin_op2 * Rs) *
+            mcot_op_m2);
+
+          /* '<S15>:1:32' */
+          APGS_B.mtp[((int16_T)mg) + ((int16_T)127)] = (cos(msin_op2 * Rs) *
+            (-mcot_op_m2)) + (APGS_P.carl * mcot_Phi2);
+
+          /* '<S15>:1:33' */
+          mg++;
+
+          /* '<S15>:1:26' */
+        }
+
+        if (APGS_DW.parking_space < 600.0) {
+          /* '<S15>:1:35' */
+          /* '<S15>:1:36' */
+          mTurn_cmd = mg + 33.0;
+        } else {
+          /* '<S15>:1:38' */
+          mTurn_cmd = mg;
+        }
+
+        /* '<S15>:1:40' */
+        /* 	mParallelPATH1.Tcount=mg; */
+        /* 	mg=1; */
+        if (mcarPHIS > 0.0) {
+          /* '<S15>:1:43' */
+          /* '<S15>:1:44' */
+          mPHI = -APGS_P.carMSA;
+        } else {
+          /* '<S15>:1:46' */
+          mPHI = APGS_P.carMSA;
+        }
+
+        /* '<S15>:1:49' */
+        mcot_Phi2 = cos(mPHI) / sin(mPHI);
+
+        /* '<S15>:1:51' */
+        mcot_op_m2 = APGS_P.carl * mcot_Phi2;
+
+        /* '<S15>:1:52' */
+        msin_op2 = (APGS_P.carV * sin(mPHI)) / APGS_P.carl;
+
+        /* '<S15>:1:54' */
+        pos_sign = (int16_T)((real_T)((L + mscan) / mscan));
+
+        /* '<S15>:1:54' */
+        for (o_count = (int16_T)0; o_count <= (pos_sign - ((int16_T)1)); o_count
+             ++) {
+          /* '<S15>:1:54' */
+          Rs = ((real_T)o_count) * mscan;
+
+          /* '<S15>:1:55' */
+          /* '<S15>:1:56' */
+          /* '<S15>:1:57' */
+          mXw2 = -(sin(msin_op2 * Rs) * mcot_op_m2);
+
+          /* '<S15>:1:58' */
+          Rs = (cos(msin_op2 * Rs) * (-mcot_op_m2)) + (APGS_P.carl * mcot_Phi2);
+          if (mPHI > 0.0) {
+            /* '<S15>:1:60' */
+            /* '<S15>:1:61' */
+            L = -mcarAlpha;
+          } else {
+            /* '<S15>:1:63' */
+            L = mcarAlpha;
+          }
+
+          /* '<S15>:1:66' */
+          avgD = (cos(L) * mXw2) - (sin(L) * Rs);
+
+          /* '<S15>:1:67' */
+          /* '<S15>:1:68' */
+          /*   mParallelPATH1.Xw1(1,mParallelPATH1.Tcount-1); */
+          /* '<S15>:1:69' */
+          Rs = fabs((sin(L) * mXw2) + (cos(L) * Rs)) + APGS_B.mtp[((int16_T)
+            ((real_T)(mTurn_cmd - 1.0))) + ((int16_T)127)];
+
+          /* mParallelPATH1.Xw1(2,mParallelPATH1.Tcount - 1); */
+          /* mParallelPATH2.Xw1(1,mg)=mXw2; */
+          /* mParallelPATH2.Xw1(2,mg)=mYw2; */
+          /* '<S15>:1:72' */
+          APGS_B.mtp[((int16_T)mg) - ((int16_T)1)] = APGS_B.mtp[((int16_T)
+            ((real_T)(mTurn_cmd - 1.0))) - ((int16_T)1)] + avgD;
+
+          /* '<S15>:1:73' */
+          APGS_B.mtp[((int16_T)mg) + ((int16_T)127)] = Rs;
+
+          /* '<S15>:1:74' */
+          mg++;
+
+          /* '<S15>:1:54' */
+        }
+
+        /* 	mParallelPATH2.Tcount=mg; */
+        /*     [mtp,miiii,mangle_cmd] = calTrajdata(mParallelPATH1,mParallelPATH2,mcarPHIS); */
+        /* function [mtp,miiii,mangle_cmd] = calTrajdata(mParallelPATH1,mParallelPATH2,mcarPHIS) */
+        /* '<S15>:1:80' */
+        for (pos_sign = (int16_T)0; pos_sign <= (((int16_T)((real_T)(mg - 1.0)))
+              - ((int16_T)1)); pos_sign++) {
+          /* '<S15>:1:80' */
+          /* '<S15>:1:81' */
+          Rs = rt_roundd(APGS_B.mtp[pos_sign] * 100.0);
+          if (Rs < 2.147483648E+9) {
+            if (Rs >= -2.147483648E+9) {
+              APGS_B.mtp[pos_sign] = (real_T)((int32_T)Rs);
+            } else {
+              APGS_B.mtp[pos_sign] = -2.147483648E+9;
+            }
+          } else {
+            APGS_B.mtp[pos_sign] = 2.147483647E+9;
+          }
+
+          /* '<S15>:1:82' */
+          Rs = rt_roundd(APGS_B.mtp[128 + pos_sign] * 100.0);
+          if (Rs < 2.147483648E+9) {
+            if (Rs >= -2.147483648E+9) {
+              APGS_B.mtp[128 + pos_sign] = (real_T)((int32_T)Rs);
+            } else {
+              APGS_B.mtp[128 + pos_sign] = -2.147483648E+9;
+            }
+          } else {
+            APGS_B.mtp[128 + pos_sign] = 2.147483647E+9;
+          }
+
+          /* '<S15>:1:80' */
+        }
+
+        /*  add 1 is for MATLAB syntax */
+        /* '<S15>:1:87' */
+        /*  	for miii=1:mlength */
+        /*  		if(miii<=mParallelPATH1.Tcount)		 */
+        /*  			mxx = int32(mParallelPATH1.Xw1(1,miii)*100.0); */
+        /*  			myy = int32(mParallelPATH1.Xw1(2,miii)*100.0);		 */
+        /*  		else		 */
+        /*  			mxx = int32(mParallelPATH2.Xw1(1,miii-mParallelPATH1.Tcount)*100.0); */
+        /*  			myy = int32(mParallelPATH2.Xw1(2,miii-mParallelPATH1.Tcount)*100.0);		 */
+        /*          end */
+        /*           */
+        /*  		mtp(miii,1)=mxx; */
+        /*  		mtp(miii,2)=myy; */
+        /*  	end */
+        /*  -----   for back in mode---------- */
+        /* x_t=ParallelPATH2.Xw1(1,1)*100.0;  */
+        /* y_t=ParallelPATH2.Xw1(2,1)*100.0;	 */
+        /* '<S15>:1:105' */
+        for (pos_sign = (int16_T)0; pos_sign <= (((int16_T)((real_T)((1.0 - mg)
+                 + 128.0))) - ((int16_T)1)); pos_sign++) {
+          /* '<S15>:1:105' */
+          Rs = mg + ((real_T)pos_sign);
+
+          /* '<S15>:1:106' */
+          APGS_B.mtp[((int16_T)Rs) + ((int16_T)127)] = APGS_B.mtp[((int16_T)
+            ((real_T)(mg - 1.0))) + ((int16_T)127)];
+
+          /* '<S15>:1:107' */
+          APGS_B.mtp[((int16_T)Rs) - ((int16_T)1)] = APGS_B.mtp[((int16_T)
+            ((real_T)(Rs - 1.0))) - ((int16_T)1)] + 40.0;
+
+          /*  orignal is 10 // Modified by Stanley 2015/1/12	 */
+          /* '<S15>:1:105' */
+        }
+
+        /* '<S15>:1:110' */
+        APGS_DW.ActLevel = (uint16_T)6U;
+        APGS_B.miiii = mTurn_cmd;
+        APGS_B.mangle_cmd = (mcarPHIS * 180.0) / 3.1415926535897931;
+
+        /* End of MATLAB Function: '<S9>/get_Rs_Fcn' */
+      }
+
+      /* End of Outputs for SubSystem: '<S4>/CalParkingPath_Parallel' */
+
+      /* Outputs for Enabled SubSystem: '<S12>/PparkingFlow' incorporates:
+       *  EnablePort: '<S19>/Enable'
+       */
+      if (APGS_B.PparkingFlowFcn > ((uint16_T)0U)) {
+        /* MATLAB Function: '<S19>/ParkingFlowControl' incorporates:
+         *  Inport: '<Root>/SAngle'
+         *  Inport: '<Root>/gear_pos'
+         *  Inport: '<Root>/ultraSonic_FCL'
+         *  Inport: '<Root>/ultraSonic_FCR'
+         *  Inport: '<Root>/ultraSonic_FML'
+         *  Inport: '<Root>/ultraSonic_FMR'
+         *  Inport: '<Root>/ultraSonic_RCL'
+         *  Inport: '<Root>/ultraSonic_RCR'
+         *  Inport: '<Root>/ultraSonic_RML'
+         *  Inport: '<Root>/ultraSonic_RMR'
+         */
+        /* MATLAB Function 'SchedulerAPGS/mainTask_function/parkingStrategy/PparkingFlow/ParkingFlowControl': '<S21>:1' */
+        /*  ----- Initial Parameter ------------------- */
+        /* global IsParallelOk; */
+        /* '<S21>:1:19' */
+        /* '<S21>:1:20' */
+        /* '<S21>:1:21' */
+        /* '<S21>:1:22' */
+        /* '<S21>:1:23' */
+        /* '<S21>:1:24' */
+        /* '<S21>:1:25' */
+        /* '<S21>:1:26' */
+        /* '<S21>:1:27' */
+        /* uint: cm */
+        /* '<S21>:1:28' */
+        /* '<S21>:1:29' */
+        /* '<S21>:1:30' */
+        /*  Show message shift gear to forward */
+        /* '<S21>:1:31' */
+        /*  Show message shift gear to reverse */
+        /* '<S21>:1:32' */
+        /* '<S21>:1:34' */
+        /* '<S21>:1:35' */
+        o_count = (int16_T)0;
+
+        /* '<S21>:1:36' */
+        ckRltPos = (int16_T)0;
+
+        /* '<S21>:1:37' */
+        /* '<S21>:1:38' */
+        /* '<S21>:1:39' */
+        /* '<S21>:1:40' */
+        /* '<S21>:1:41' */
+        /* '<S21>:1:42' */
+        memset(&ddiff[0L], 0, ((uint16_T)100U) * (sizeof(real_T)));
+
+        /* -------------Parallel check by Ultrasonic --------------------- */
+        /*  if((FML < 80 || FMR < 80) && (FML > 30 || FMR > 30)) */
+        /*       if(abs(FML - FMR) < 3) */
+        /*           IsParallelOk = uint8(1); */
+        /*       end */
+        /*  end */
+        /*     */
+        /*  if((RML < 80 || RMR < 80) && (RML > 30 || RMR > 30)) */
+        /*       if(abs(RML - RMR) < 3) */
+        /*           IsParallelOk = uint8(1);       */
+        /*       end */
+        /*  end */
+        /* ----------------------------------------------------------------- */
+        if (((((APGS_U.ultraSonic_FCL == 255.0) && (APGS_U.ultraSonic_FML ==
+                255.0)) && (APGS_U.ultraSonic_FMR == 255.0)) &&
+             (APGS_U.ultraSonic_FCR <= 60.0)) && (APGS_DW.IsMultiTurn == 0.0)) {
+          /* '<S21>:1:59' */
+          /* '<S21>:1:60' */
+          APGS_DW.turningStep = 3.0;
+        }
+
+        if ((APGS_DW.turningStep == 3.0) && (APGS_U.ultraSonic_FCR > 60.0)) {
+          /* '<S21>:1:62' */
+          /* '<S21>:1:63' */
+          APGS_DW.turningStep = 0.0;
+
+          /* '<S21>:1:64' */
+          APGS_DW.multiShift = 0.0;
+
+          /* In case of FCR_TO_CLOSE repeate  */
+        }
+
+        if (((((APGS_U.ultraSonic_RCL <= 30.0) || (APGS_U.ultraSonic_RML <= 30.0))
+              || (APGS_U.ultraSonic_RMR <= 30.0)) || (APGS_U.ultraSonic_RCR <=
+              30.0)) && (APGS_DW.multiShift == 0.0)) {
+          /* '<S21>:1:68' */
+          /*  Objects detected from rear when backing */
+          if (APGS_DW.turningStep == 0.0) {
+            /* '<S21>:1:69' */
+            /* '<S21>:1:70' */
+            APGS_DW.IsMultiTurn = 0.0;
+
+            /*  Two Turn */
+          } else {
+            /* '<S21>:1:72' */
+            APGS_DW.IsMultiTurn = 1.0;
+
+            /*  Multi-Turn    */
+          }
+
+          if (APGS_U.gear_pos != ((uint16_T)81U)) {
+            /* '<S21>:1:75' */
+            /* '<S21>:1:76' */
+            tmp = ((uint16_T)APGS_DW.steerTurnCnt) + ((uint8_T)1U);
+            if (tmp > ((uint16_T)255U)) {
+              tmp = (uint16_T)255U;
+            }
+
+            APGS_DW.steerTurnCnt = (uint8_T)tmp;
+
+            /*  multi-turn counts in case of parking askew     */
+            /* '<S21>:1:77' */
+            APGS_DW.multiShift = 1.0;
+
+            /*  Set flg to forward */
+            /* '<S21>:1:78' */
+            APGS_DW.MsgForUI = 6.0;
+          }
+        } else {
+          if ((((((APGS_U.ultraSonic_FCL <= 30.0) || (APGS_U.ultraSonic_FML <=
+                   30.0)) || (APGS_U.ultraSonic_FMR <= 30.0)) ||
+                (APGS_U.ultraSonic_FCR <= 30.0)) && (APGS_DW.multiShift == 1.0))
+              && (APGS_DW.turningStep != 3.0)) {
+            /* '<S21>:1:81' */
+            /*  Objects detected from rear when direct */
+            if (APGS_DW.turningStep == 0.0) {
+              /* '<S21>:1:82' */
+              /* '<S21>:1:83' */
+              APGS_DW.IsMultiTurn = 0.0;
+
+              /*  Two Turn */
+            } else {
+              /* '<S21>:1:85' */
+              APGS_DW.IsMultiTurn = 1.0;
+
+              /*  Multi-Turn    */
+            }
+
+            if (APGS_U.gear_pos != ((uint16_T)119U)) {
+              /* '<S21>:1:88' */
+              /* '<S21>:1:89' */
+              tmp = ((uint16_T)APGS_DW.steerTurnCnt) + ((uint8_T)1U);
+              if (tmp > ((uint16_T)255U)) {
+                tmp = (uint16_T)255U;
+              }
+
+              APGS_DW.steerTurnCnt = (uint8_T)tmp;
+
+              /*  multi-turn counts in case of parking askew          */
+              /* '<S21>:1:90' */
+              APGS_DW.multiShift = 0.0;
+
+              /*  Set flg to forward */
+              /* '<S21>:1:91' */
+              APGS_DW.MsgForUI = 7.0;
+            }
+          }
+        }
+
+        if ((APGS_DW.MsgForUI == 6.0) && (APGS_U.gear_pos == ((uint16_T)81U))) {
+          /* '<S21>:1:95' */
+          /*  Clear disply when get right position */
+          /* '<S21>:1:96' */
+          APGS_DW.MsgForUI = 5.0;
+        } else {
+          if ((APGS_DW.MsgForUI == 7.0) && (APGS_U.gear_pos == ((uint16_T)119U)))
+          {
+            /* '<S21>:1:97' */
+            /*  Clear disply when get right position */
+            /* '<S21>:1:98' */
+            APGS_DW.MsgForUI = 5.0;
+          }
+        }
+
+        /*  --------------- Find point for steering change -------------------------- */
+        if (APGS_DW.IsMultiTurn != 1.0) {
+          /* '<S21>:1:102' */
+          /* '<S21>:1:103' */
+          pos_sign = (int16_T)0;
+          exitg1 = (boolean_T)false;
+          while ((!exitg1) && (pos_sign < 128)) {
+            /* '<S21>:1:103' */
+            /* '<S21>:1:104' */
+            /* '<S21>:1:105' */
+            /* '<S21>:1:106' */
+            if (((fabs(APGS_B.mtp[((int16_T)1) + pos_sign] - APGS_B.mtp[pos_sign])
+                  <= 1.0) && (APGS_B.mtp[128 + pos_sign] > APGS_DW.y_pos)) ||
+                (APGS_B.mtp[pos_sign] > APGS_DW.x_pos)) {
+              /* '<S21>:1:108' */
+              /* '<S21>:1:109' */
+              ckRltPos = pos_sign;
+              exitg1 = (boolean_T)true;
+            } else {
+              /* '<S21>:1:103' */
+              pos_sign++;
+            }
+          }
+
+          /* '<S21>:1:113' */
+          /* '<S21>:1:114' */
+          /* '<S21>:1:121' */
+          for (pos_sign = (int8_T)0; pos_sign <= ((int8_T)9); pos_sign++) {
+            /* '<S21>:1:114' */
+            /* '<S21>:1:115' */
+            Rs = APGS_B.mtp[ckRltPos + pos_sign] - APGS_DW.x_pos;
+
+            /*  expected path coordinate transform  shift */
+            /* '<S21>:1:116' */
+            L = APGS_B.mtp[(ckRltPos + pos_sign) + 128] - APGS_DW.y_pos;
+
+            /*  expected path coordinate transform shift */
+            /* '<S21>:1:117' */
+            mcarAlpha = (Rs * cos(-APGS_DW.angle)) - (L * sin(-APGS_DW.angle));
+
+            /*  expected path coordinate transform rotation */
+            /* '<S21>:1:118' */
+            Rs = (Rs * sin(-APGS_DW.angle)) + (L * cos(-APGS_DW.angle));
+
+            /*  expected path coordinate transform rotation       */
+            /* '<S21>:1:114' */
+            /* '<S21>:1:121' */
+            /* '<S21>:1:122' */
+            /* '<S21>:1:123' */
+            ddiff[pos_sign] = fabs(sqrt((mcarAlpha * mcarAlpha) + (Rs * Rs)) -
+              40.0);
+
+            /* '<S21>:1:121' */
+          }
+
+          /*  ------ find the point that is the closest to the lookahead point on the path. */
+          /* '<S21>:1:127' */
+          Rs = ddiff[(int8_T)0];
+
+          /* '<S21>:1:128' */
+          for (pos_sign = (int8_T)0; pos_sign <= ((int8_T)9); pos_sign++) {
+            /* '<S21>:1:128' */
+            if ((Rs > ddiff[pos_sign]) || (Rs == ddiff[pos_sign])) {
+              /* '<S21>:1:129' */
+              /* '<S21>:1:130' */
+              Rs = ddiff[pos_sign];
+
+              /* '<S21>:1:131' */
+              o_count = pos_sign + ((int16_T)1);
+            }
+
+            /* '<S21>:1:128' */
+          }
+
+          /* '<S21>:1:134' */
+          APGS_DW.IsMultiTurn = 0.0;
+
+          /* '<S21>:1:135' */
+          APGS_DW.LHPResult = (real_T)((int16_T)(o_count + ckRltPos));
+        }
+
+        /*  --End of if(IsMultiTurn ~= 1) */
+        if (APGS_DW.IsMultiTurn == 0.0) {
+          /* '<S21>:1:138' */
+          if ((APGS_DW.yaw_odm >= -1.0) && (APGS_DW.turningStep != 0.0)) {
+            /* '<S21>:1:139' */
+            /* '<S21>:1:140' */
+            APGS_DW.final_steer = 1.0;
+            if (((APGS_U.SAngle > -10.0) && (APGS_U.SAngle < 10.0)) &&
+                (APGS_DW.steer_cmd == 0L)) {
+              /* '<S21>:1:141' */
+              /* '<S21>:1:142' */
+              APGS_DW.MsgForUI = 8.0;
+
+              /* '<S21>:1:143' */
+              APGS_DW.ActLevel = (uint16_T)5U;
+            }
+          }
+        } else {
+          if (((APGS_DW.IsMultiTurn == 1.0) && (APGS_DW.yaw_odm >= -1.0)) &&
+              (APGS_DW.turningStep != 0.0)) {
+            /* '<S21>:1:147' */
+            /* '<S21>:1:148' */
+            /*  limit counts of turn in 4 times. */
+            /* '<S21>:1:149' */
+            APGS_DW.turningStep = 2.0;
+
+            /* '<S21>:1:150' */
+            APGS_DW.final_steer = 1.0;
+            if (((APGS_U.SAngle > -10.0) && (APGS_U.SAngle < 10.0)) &&
+                (APGS_DW.steer_cmd == 0L)) {
+              /* '<S21>:1:151' */
+              /* '<S21>:1:152' */
+              APGS_DW.MsgForUI = 8.0;
+
+              /* '<S21>:1:153' */
+              APGS_DW.ActLevel = (uint16_T)5U;
+            }
+          }
+        }
+
+        /* End of MATLAB Function: '<S19>/ParkingFlowControl' */
+      }
+
+      /* End of Outputs for SubSystem: '<S12>/PparkingFlow' */
+      /* End of Outputs for SubSystem: '<S1>/mainTask_function' */
+    }
+
+    /* Outputs for Function Call SubSystem: '<S1>/steerCtrlTask_function' */
+    /* Outputs for Enabled SubSystem: '<S6>/get_steer_cmd' incorporates:
+     *  EnablePort: '<S24>/Enable'
+     */
+    if ((((int16_T)APGS_DW.temporalCounter_i1) == ((int16_T)1)) &&
+        (APGS_B.steerCtlParkingFcn > ((uint16_T)0U))) {
+      /* MATLAB Function: '<S24>/get_two_turn_cmd_fcn' incorporates:
+       *  Inport: '<Root>/back_right'
+       *  Inport: '<Root>/gear_pos'
+       *  Inport: '<Root>/parkMode'
+       *  Inport: '<Root>/ultraSonic_RML'
+       *  Inport: '<Root>/ultraSonic_RMR'
+       */
+      /* Event: '<S3>:32' */
+      /* MATLAB Function 'SchedulerAPGS/steerCtrlTask_function/get_steer_cmd/get_two_turn_cmd_fcn': '<S25>:1' */
+      /* -------Initial Parameter---------------- */
+      /* '<S25>:1:13' */
+      /* '<S25>:1:14' */
+      /* '<S25>:1:15' */
+      /* '<S25>:1:16' */
+      /* '<S25>:1:17' */
+      /* '<S25>:1:18' */
+      /* '<S25>:1:19' */
+      /* '<S25>:1:20' */
+      /* '<S25>:1:21' */
+      /* '<S25>:1:22' */
+      /* '<S25>:1:23' */
+      /* ---------------back In mode-------------------------  */
+      /* '<S25>:1:25' */
+      /* '<S25>:1:26' */
+      /* '<S25>:1:27' */
+      if (APGS_DW.IsSteerZeroCmd == 0.0) {
+        /* '<S25>:1:31' */
+        /* '<S25>:1:32' */
+        APGS_DW.steer_cmd = 0L;
+
+        /*  Keep steer zero if parking_n is not in the defined range */
+      } else if (APGS_U.parkMode == 1.0) {
+        /* '<S25>:1:34' */
+        /* -------Command Flow -------------------- */
+        if (APGS_DW.IsMultiTurn == 0.0) {
+          /* '<S25>:1:36' */
+          /*  Two Turn */
+          if (APGS_B.miiii >= APGS_DW.LHPResult) {
+            /* '<S25>:1:37' */
+            /* '<S25>:1:38' */
+            Rs = rt_roundd(((((APGS_B.mangle_cmd * APGS_B.mangle_cmd) * 0.0012)
+                             + (-0.0012 * pow(APGS_B.mangle_cmd, 3.0))) +
+                            (16.0559 * APGS_B.mangle_cmd)) + 0.52737);
+            if (Rs < 2.147483648E+9) {
+              if (Rs >= -2.147483648E+9) {
+                APGS_DW.steer_cmd = (int32_T)Rs;
+              } else {
+                APGS_DW.steer_cmd = MIN_int32_T;
+              }
+            } else {
+              APGS_DW.steer_cmd = MAX_int32_T;
+            }
+          } else {
+            if ((APGS_B.miiii < APGS_DW.LHPResult) && (APGS_DW.turningStep ==
+                 0.0)) {
+              /* '<S25>:1:39' */
+              /* '<S25>:1:40' */
+              APGS_DW.turningStep = 1.0;
+            }
+          }
+
+          if (APGS_DW.turningStep == 3.0) {
+            /* '<S25>:1:43' */
+            /* '<S25>:1:44' */
+            APGS_DW.steer_cmd = 0L;
+          }
+
+          if (APGS_DW.turningStep == 1.0) {
+            /* '<S25>:1:47' */
+            /* '<S25>:1:48' */
+            APGS_DW.steer_cmd = -450L;
+          }
+
+          if (APGS_DW.final_steer == 1.0) {
+            /* '<S25>:1:51' */
+            /* '<S25>:1:52' */
+            APGS_DW.steer_cmd = 0L;
+          }
+        } else {
+          if (APGS_DW.IsMultiTurn == 1.0) {
+            /* '<S25>:1:54' */
+            /* '<S25>:1:55' */
+            APGS_DW.turningStep = 2.0;
+            if (APGS_DW.multiShift == 1.0) {
+              /* '<S25>:1:56' */
+              /* '<S25>:1:57' */
+              APGS_DW.steer_cmd = 450L;
+            } else {
+              if (APGS_DW.multiShift == 0.0) {
+                /* '<S25>:1:58' */
+                /* '<S25>:1:59' */
+                APGS_DW.steer_cmd = -450L;
+              }
+            }
+
+            if ((APGS_DW.final_steer == 1.0) && (APGS_U.gear_pos == ((uint16_T)
+                  81U))) {
+              /* '<S25>:1:61' */
+              /* '<S25>:1:62' */
+              APGS_DW.steer_cmd = 0L;
+
+              /* tracking over to overcome the friction */
+            } else {
+              if ((APGS_DW.final_steer == 1.0) && (APGS_U.gear_pos == ((uint16_T)
+                    119U))) {
+                /* '<S25>:1:63' */
+                /* '<S25>:1:65' */
+                APGS_DW.steer_cmd = 0L;
+              }
+            }
+          }
+        }
+      } else {
+        if (APGS_U.parkMode == 2.0) {
+          /* '<S25>:1:68' */
+          if (((int16_T)APGS_DW.backIn_step) == ((int16_T)0)) {
+            /* '<S25>:1:69' */
+            /* '<S25>:1:70' */
+            APGS_DW.steer_cmd = 450L;
+          } else if (((int16_T)APGS_DW.backIn_step) == ((int16_T)1)) {
+            /* '<S25>:1:71' */
+            /* '<S25>:1:72' */
+            APGS_DW.steer_cmd = -450L;
+          } else {
+            if (((int16_T)APGS_DW.backIn_step) == ((int16_T)2)) {
+              /* '<S25>:1:73' */
+              if (((APGS_U.back_right > 50.0) && (APGS_U.ultraSonic_RMR < 70)))
+                  APGS_DW.steer_cmd = - 90;
+
+              if((APGS_DW.y_pos > (APGS_DW.parking_m + 300)) && APGS_U.SAngle < 10 && APGS_U.SAngle > -10 )
+                  APGS_DW.ActLevel = APGS_DW.APGS_FINISH; 
+                
+              if (((APGS_U.back_right < 100.0) && (APGS_U.ultraSonic_RMR ==
+                    255.0)) && (APGS_U.ultraSonic_RML == 255.0)) {
+                /* '<S25>:1:74' */
+                /* '<S25>:1:75' */
+                Rs = (APGS_U.back_right - 50.0) * 0.1;
+
+                /* '<S25>:1:76' */
+                Rs = rt_roundd(((((Rs * Rs) * 0.0012) + (-0.0012 * pow(Rs, 3.0)))
+                                + (16.0559 * Rs)) + 0.52737);
+                if (Rs < 2.147483648E+9) {
+                  if (Rs >= -2.147483648E+9) {
+                    APGS_DW.steer_cmd = (int32_T)Rs;
+                  } else {
+                    APGS_DW.steer_cmd = MIN_int32_T;
+                  }
+                } else {
+                  APGS_DW.steer_cmd = MAX_int32_T;
+                }
+              } else if (((APGS_U.back_right > 150.0) && (APGS_U.ultraSonic_RMR
+                == 255.0)) && (APGS_U.ultraSonic_RML == 255.0)) {
+                /* '<S25>:1:77' */
+                /* '<S25>:1:78' */
+                APGS_DW.steer_cmd = 0L;
+              } else if ((APGS_U.ultraSonic_RMR == 255.0) &&
+                         (APGS_U.ultraSonic_RML < 200.0)) {
+                /* '<S25>:1:79' */
+                /* '<S25>:1:80' */
+                Rs = (atan(204.6 / (((APGS_U.ultraSonic_RML *
+                                      APGS_U.ultraSonic_RML) + 1440.0) / 240.0))
+                      * 180.0) / 3.1415926535897931;
+
+                /* 70+50 = 120 1440 = 120^2 240 = 2*x */
+                /* '<S25>:1:81' */
+                Rs = rt_roundd(((((Rs * Rs) * 0.0012) + (-0.0012 * pow(Rs, 3.0)))
+                                + (16.0559 * Rs)) + 0.52737);
+                if (Rs < 2.147483648E+9) {
+                  if (Rs >= -2.147483648E+9) {
+                    APGS_DW.steer_cmd = (int32_T)Rs;
+                  } else {
+                    APGS_DW.steer_cmd = MIN_int32_T;
+                  }
+                } else {
+                  APGS_DW.steer_cmd = MAX_int32_T;
+                }
+              } else {
+                if ((APGS_U.ultraSonic_RML == 255.0) && (APGS_U.ultraSonic_RMR <
+                     200.0)) {
+                  /* '<S25>:1:82' */
+                  /* '<S25>:1:83' */
+                  Rs = (atan(204.6 / (((APGS_U.ultraSonic_RMR *
+                                        APGS_U.ultraSonic_RMR) + 1440.0) / 240.0))
+                        * -180.0) / 3.1415926535897931;
+
+                  /* 70+50 = 120 1440 = 120^2 240 = 2*x  */
+                  /* '<S25>:1:84' */
+                  Rs = rt_roundd(((((Rs * Rs) * 0.0012) + (-0.0012 * pow(Rs, 3.0)))
+                                  + (16.0559 * Rs)) + 0.52737);
+                  if (Rs < 2.147483648E+9) {
+                    if (Rs >= -2.147483648E+9) {
+                      APGS_DW.steer_cmd = (int32_T)Rs;
+                    } else {
+                      APGS_DW.steer_cmd = MIN_int32_T;
+                    }
+                  } else {
+                    APGS_DW.steer_cmd = MAX_int32_T;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      /* End of MATLAB Function: '<S24>/get_two_turn_cmd_fcn' */
+    }
+
+    /* End of Outputs for SubSystem: '<S6>/get_steer_cmd' */
+    /* End of Outputs for SubSystem: '<S1>/steerCtrlTask_function' */
+
+ 
+  }
+
+  if (((int16_T)APGS_DW.temporalCounter_i1) == ((int16_T)1)) {
+    APGS_DW.temporalCounter_i1 = 0U;
+  }
+
+  /* End of Chart: '<S1>/TaskScheduler' */
+}
+
+/* Model initialize function */
+void APGS_initialize(void)
+{
+  /* Registration code */
+
+  /* initialize error status */
+  rtmSetErrorStatus(APGS_M, (NULL));
+
+  /* block I/O */
+  (void) memset(((void *) &APGS_B), 0,
+                sizeof(B_APGS_T));
+
+  /* states (dwork) */
+  (void) memset((void *)&APGS_DW, 0,
+                sizeof(DW_APGS_T));
+
+  /* external inputs */
+  (void) memset((void *)&APGS_U, 0,
+                sizeof(ExtU_APGS_T));
+
+  /* Start for S-Function (fcncallgen): '<S2>/TriggerSrc' incorporates:
+   *  Start for Chart: '<S1>/TaskScheduler'
+   */
+  /* Start for Chart: '<S1>/TaskScheduler' incorporates:
+   *  Start for SubSystem: '<S1>/mainTask_function'
+   */
+  /* InitializeConditions for Enabled SubSystem: '<S4>/edgDetCalc1' */
+  /* InitializeConditions for Delay: '<S11>/Delay' incorporates:
+   *  Start for Delay: '<S11>/Delay'
+   */
+  APGS_DW.Delay_DSTATE = APGS_P.Delay_InitialCondition;
+
+  /* InitializeConditions for Delay: '<S11>/Delay1' incorporates:
+   *  Start for Delay: '<S11>/Delay1'
+   */
+  APGS_DW.Delay1_DSTATE = APGS_P.Delay1_InitialCondition;
+
+  /* End of InitializeConditions for SubSystem: '<S4>/edgDetCalc1' */
+
+  /* Start for DataStoreMemory: '<S1>/ActLevel' */
+  APGS_DW.ActLevel = APGS_P.ActLevel_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/IsMultiTurn' */
+  APGS_DW.IsMultiTurn = APGS_P.IsMultiTurn_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/IsParallelOk' */
+  APGS_DW.IsParallelOk = APGS_P.IsParallelOk_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/IsSteerZeroCmd' */
+  APGS_DW.IsSteerZeroCmd = APGS_P.IsSteerZeroCmd_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/LHPResult' */
+  APGS_DW.LHPResult = APGS_P.LHPResult_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/MsgForUI' */
+  APGS_DW.MsgForUI = APGS_P.MsgForUI_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/angle' */
+  APGS_DW.angle = APGS_P.angle_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/backIn_step' */
+  APGS_DW.backIn_step = APGS_P.backIn_step_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/edg1_cnt' */
+  APGS_DW.edg1_cnt = APGS_P.edg1_cnt_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/edg1_stage' */
+  APGS_DW.edg1_stage = APGS_P.edg1_stage_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/edg2_cnt' */
+  APGS_DW.edg2_cnt = APGS_P.edg2_cnt_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/edgEndFlg' */
+  APGS_DW.edgEndFlg = APGS_P.edgEndFlg_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/edg_count' */
+  APGS_DW.edg_count = APGS_P.edg_count_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/edg_flg' */
+  APGS_DW.edg_flg = APGS_P.edg_flg_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/edg_info' */
+  memcpy(&APGS_DW.edg_info[0L], &APGS_P.edg_info_InitialValue[0L], ((uint16_T)
+          90U) * (sizeof(real_T)));
+
+  /* Start for DataStoreMemory: '<S1>/final_steer' */
+  APGS_DW.final_steer = APGS_P.final_steer_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/first_edg_pos' */
+  APGS_DW.first_edg_pos = APGS_P.first_edg_pos_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/int_count' */
+  APGS_DW.int_count = APGS_P.int_count_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/moving_distance' */
+  APGS_DW.moving_distance = APGS_P.moving_distance_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/multiShift' */
+  APGS_DW.multiShift = APGS_P.multiShift_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/parking_m' */
+  APGS_DW.parking_m = APGS_P.parking_m_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/parking_n' */
+  APGS_DW.parking_n = APGS_P.parking_n_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/parking_space' */
+  APGS_DW.parking_space = APGS_P.parking_space_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/second_edg_pos' */
+  APGS_DW.second_edg_pos = APGS_P.second_edg_pos_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/steerTurnCnt' */
+  APGS_DW.steerTurnCnt = APGS_P.steerTurnCnt_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/steerTurnCnt_old' */
+  APGS_DW.steerTurnCnt_old = APGS_P.steerTurnCnt_old_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/steer_cmd' */
+  APGS_DW.steer_cmd = APGS_P.steer_cmd_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/turningStep' */
+  APGS_DW.turningStep = APGS_P.turningStep_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/vld_status' */
+  APGS_DW.vld_status = APGS_P.vld_status_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/x_pos' */
+  APGS_DW.x_pos = APGS_P.x_pos_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/y_pos' */
+  APGS_DW.y_pos = APGS_P.y_pos_InitialValue;
+
+  /* Start for DataStoreMemory: '<S1>/yaw_odm' */
+  APGS_DW.yaw_odm = APGS_P.yaw_odm_InitialValue;
+
+  /* InitializeConditions for S-Function (fcncallgen): '<S2>/TriggerSrc' incorporates:
+   *  InitializeConditions for Chart: '<S1>/TaskScheduler'
+   */
+  APGS_DW.is_active_shcheduler = 0U;
+  APGS_DW.temporalCounter_i1 = 0U;
+  APGS_DW.is_active_c3_APGS = 0U;
+
+  /* InitializeConditions for Chart: '<S1>/TaskScheduler' incorporates:
+   *  InitializeConditions for SubSystem: '<S1>/mainTask_function'
+   */
+  /* InitializeConditions for Chart: '<S7>/APGS_FlowAction' */
+  APGS_DW.is_active_c1_APGS = 0U;
+  APGS_DW.is_c1_APGS = APGS_IN_NO_ACTIVE_CHILD;
+}
+
+/* Model terminate function */
+void APGS_terminate(void)
+{
+  /* (no terminate code required) */
+}
+
+/*
+ * File trailer for generated code.
+ *
+ * [EOF]
+ */

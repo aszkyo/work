@@ -1,0 +1,84 @@
+[Header]
+MagicCookie={0b13fe8c-dfe0-40eb-8900-6712719559a7}
+Version=1.0
+[File000]
+Location=D:\Workspace\2015\Fuda\AGPS\Final_Ver_20151209\Src_B_v6_tmp6_with_ui\main_APGS.o
+Folder=Intermediary
+DeviceName=dsPIC30F6010A
+LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
+LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
+LanguageToolLocation=C:\Program Files (x86)\Microchip\MPLAB C30\bin\pic30-gcc.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib\dsPIC30F||$(LKRDIR)||
+SOLK=<src>|main_APGS.c|APGS.c|APGS_data.c|dataSave.c||<obj>||<lib>|C:\Program Files (x86)\Microchip\MPLAB C30\lib\dsPIC30F\libp30F6010A-coff.a||<lkr>|C:\Program Files (x86)\Microchip\MPLAB C30\support\dsPIC30F\gld\p30f6010A.gld||
+SuiteArgsString=
+ToolArgsString=-g
+TraceCmdString=
+DebugOptions=
+[File001]
+Location=D:\Workspace\2015\Fuda\AGPS\Final_Ver_20151209\Src_B_v6_tmp6_with_ui\APGS.o
+Folder=Intermediary
+DeviceName=dsPIC30F6010A
+LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
+LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
+LanguageToolLocation=C:\Program Files (x86)\Microchip\MPLAB C30\bin\pic30-gcc.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib\dsPIC30F||$(LKRDIR)||
+SOLK=<src>|main_APGS.c|APGS.c|APGS_data.c|dataSave.c||<obj>||<lib>|C:\Program Files (x86)\Microchip\MPLAB C30\lib\dsPIC30F\libp30F6010A-coff.a||<lkr>|C:\Program Files (x86)\Microchip\MPLAB C30\support\dsPIC30F\gld\p30f6010A.gld||
+SuiteArgsString=
+ToolArgsString=-g
+TraceCmdString=
+DebugOptions=
+[File002]
+Location=D:\Workspace\2015\Fuda\AGPS\Final_Ver_20151209\Src_B_v6_tmp6_with_ui\APGS_data.o
+Folder=Intermediary
+DeviceName=dsPIC30F6010A
+LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
+LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
+LanguageToolLocation=C:\Program Files (x86)\Microchip\MPLAB C30\bin\pic30-gcc.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib\dsPIC30F||$(LKRDIR)||
+SOLK=<src>|main_APGS.c|APGS.c|APGS_data.c|dataSave.c||<obj>||<lib>|C:\Program Files (x86)\Microchip\MPLAB C30\lib\dsPIC30F\libp30F6010A-coff.a||<lkr>|C:\Program Files (x86)\Microchip\MPLAB C30\support\dsPIC30F\gld\p30f6010A.gld||
+SuiteArgsString=
+ToolArgsString=-g
+TraceCmdString=
+DebugOptions=
+[File003]
+Location=D:\Workspace\2015\Fuda\AGPS\Final_Ver_20151209\Src_B_v6_tmp6_with_ui\dataSave.o
+Folder=Intermediary
+DeviceName=dsPIC30F6010A
+LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
+LanguageToolID={069BD372-6CA0-40D4-BF2F-5DC806D05083}
+LanguageToolLocation=C:\Program Files (x86)\Microchip\MPLAB C30\bin\pic30-gcc.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib\dsPIC30F||$(LKRDIR)||
+SOLK=<src>|main_APGS.c|APGS.c|APGS_data.c|dataSave.c||<obj>||<lib>|C:\Program Files (x86)\Microchip\MPLAB C30\lib\dsPIC30F\libp30F6010A-coff.a||<lkr>|C:\Program Files (x86)\Microchip\MPLAB C30\support\dsPIC30F\gld\p30f6010A.gld||
+SuiteArgsString=
+ToolArgsString=-g
+TraceCmdString=
+DebugOptions=
+[File004]
+Location=D:\Workspace\2015\Fuda\AGPS\Final_Ver_20151209\Src_B_v6_tmp6_with_ui\apgs.cof
+Folder=Output
+DeviceName=dsPIC30F6010A
+LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
+LanguageToolID={433C3D55-811D-409D-A6BF-159CF9355B42}
+LanguageToolLocation=C:\Program Files (x86)\Microchip\MPLAB C30\bin\pic30-ld.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib\dsPIC30F||$(LKRDIR)||
+SOLK=<src>|main_APGS.c|APGS.c|APGS_data.c|dataSave.c||<obj>||<lib>|C:\Program Files (x86)\Microchip\MPLAB C30\lib\dsPIC30F\libp30F6010A-coff.a||<lkr>|C:\Program Files (x86)\Microchip\MPLAB C30\support\dsPIC30F\gld\p30f6010A.gld||
+SuiteArgsString=
+ToolArgsString=--heap=64 --defsym=__ICD2RAM=1 -o"$(BINDIR_)$(TARGETBASE).$(TARGETSUFFIX)"
+TraceCmdString=
+DebugOptions=
+[File005]
+Location=D:\Workspace\2015\Fuda\AGPS\Final_Ver_20151209\Src_B_v6_tmp6_with_ui\apgs.hex
+Folder=Output
+DeviceName=dsPIC30F6010A
+LanguageToolSuiteID={479DDE59-4D56-455E-855E-FFF59A3DB57E}
+LanguageToolID={433C3D55-811D-409D-A6BF-159CF9355B42}
+LanguageToolLocation=C:\Program Files (x86)\Microchip\MPLAB C30\bin\pic30-ld.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)|C:\Program Files\Microchip\MPLAB C30\lib\dsPIC30F||$(LKRDIR)||
+SOLK=<src>|main_APGS.c|APGS.c|APGS_data.c|dataSave.c||<obj>||<lib>|C:\Program Files (x86)\Microchip\MPLAB C30\lib\dsPIC30F\libp30F6010A-coff.a||<lkr>|C:\Program Files (x86)\Microchip\MPLAB C30\support\dsPIC30F\gld\p30f6010A.gld||
+SuiteArgsString=
+ToolArgsString=--heap=64 --defsym=__ICD2RAM=1 -o"$(BINDIR_)$(TARGETBASE).$(TARGETSUFFIX)"
+TraceCmdString=
+DebugOptions=
+[TOOL_LOC_STAMPS]
+tool_loc{069BD372-6CA0-40D4-BF2F-5DC806D05083}=C:\Program Files (x86)\Microchip\MPLAB C30\bin\pic30-gcc.exe
+tool_loc{433C3D55-811D-409D-A6BF-159CF9355B42}=C:\Program Files (x86)\Microchip\MPLAB C30\bin\pic30-ld.exe
